@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Combobox } from "@headlessui/react";
 
 type Country = {
@@ -23,6 +24,7 @@ const COUNTRIES: Country[] = [
 ];
 
 export default function CreateCompanyPage() {
+  const router = useRouter();
   /* -------------------- form state -------------------- */
   const [companyName, setCompanyName] = useState('');
   const [website, setWebsite] = useState('');
@@ -408,7 +410,7 @@ export default function CreateCompanyPage() {
             <div className="space-y-6 max-w-md mx-auto">
               <div>
                 <button
-                  onClick={() => alert('Create job flow')}
+                  onClick={() => router.push('/CreateJob')}
                   className="w-full bg-black text-white rounded-xl py-4 text-lg font-semibold hover:bg-neutral-800 transition-colors"
                 >
                   Create Job Now
