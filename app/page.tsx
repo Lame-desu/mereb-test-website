@@ -81,8 +81,8 @@ export default function CreateCompanyPage() {
   const locationError =
     touched.location && !location ? '⚠ Please select a location' : '';
 
-  const websiteError = useMemo(() => {
-    if (!touched.website || website.trim() === '') return '';
+  const websiteValidationError = useMemo(() => {
+    if (website.trim() === '') return '';
 
     if (!website.startsWith('https://')) {
       return '⚠ Add https:// to make this a valid URL';
@@ -93,9 +93,11 @@ export default function CreateCompanyPage() {
     }
 
     return '';
-  }, [website, touched.website]);
+  }, [website]);
 
-  const isFormValid = companyName.trim() !== '' && location !== null;
+  const websiteError = touched.website ? websiteValidationError : '';
+
+  const isFormValid = companyName.trim() !== '' && location !== null && websiteValidationError === '';
 
   /* -------------------- logo handling -------------------- */
   // const fileInputRef = useRef<HTMLInputElement>(null);
@@ -172,11 +174,6 @@ export default function CreateCompanyPage() {
                   <span className="text-xs text-neutral-600">
                     {progress}% complete
                   </span>
-                  {isFormValid && (
-                    <span className="text-xs text-green-600 font-medium">
-                      You’re ready to create your company
-                    </span>
-                  )}
                 </div>
                 <div className="h-2 bg-neutral-200 rounded-full overflow-hidden">
                   <div
@@ -184,6 +181,14 @@ export default function CreateCompanyPage() {
                     style={{ width: `${progress}%` }}
                   />
                 </div>
+                {isFormValid && (
+                  <div className="mt-4 flex items-center justify-center space-x-2 text-emerald-600 bg-emerald-50/50 px-4 py-2 rounded-lg border border-emerald-100">
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-xs font-bold">You’re ready to create your company</span>
+                  </div>
+                )}
               </div>
             </div>
 
