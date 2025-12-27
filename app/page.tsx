@@ -95,7 +95,7 @@ export default function CreateCompanyPage() {
     return '';
   }, [website]);
 
-  const websiteError = touched.website ? websiteValidationError : '';
+  const websiteError = (touched.website || website.trim() !== '') ? websiteValidationError : '';
 
   const isFormValid = companyName.trim() !== '' && location !== null && websiteValidationError === '';
 
