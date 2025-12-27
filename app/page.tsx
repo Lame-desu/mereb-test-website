@@ -399,9 +399,12 @@ export default function CreateCompanyPage() {
           </div>
         ) : (
           <div className="w-full max-w-[800px] bg-neutral-50 rounded-xl shadow-sm border p-12 text-center">
-            <div className="mb-8">
+            <div className="mb-8 flex items-center justify-center space-x-2">
+              <svg className="h-5 w-5 text-neutral-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+              </svg>
               <p className="text-lg font-semibold text-neutral-900">
-                ✅ Company created successfully
+                Company created successfully
               </p>
             </div>
 
