@@ -90,6 +90,7 @@ export default function JobBasicInfoPage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisStep, setAnalysisStep] = useState(0);
   const [publishMode, setPublishMode] = useState<'publish' | 'draft'>('publish');
+  const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
 
   /* ---------------- effects ---------------- */
   useEffect(() => {
@@ -133,20 +134,53 @@ export default function JobBasicInfoPage() {
   /* ---------------- progress ---------------- */
   const progress = useMemo(() => {
     if (step === 1) {
-      let score = 0;
-      if (companyId) score += 33.3;
-      if (jobTitle.trim() !== '') score += 33.3;
-      if (country) score += 33.4;
-      return Math.round(score);
+      let filled = 0;
+      if (companyId) filled++;
+      if (jobTitle.trim() !== '') filled++;
+      if (country) filled++;
+      if (city.trim() !== '') filled++;
+      return Math.round((filled / 4) * 100);
     }
     if (step === 2) {
-      return jobDescription.trim() !== '' ? 100 : 0;
+      let filled = 0;
+      if (jobDescription.trim() !== '') filled++;
+      if (jobTypes.length > 0) filled++;
+      if (workplaces.length > 0) filled++;
+      if (experienceLevels.length > 0) filled++;
+      if (minSalary.trim() !== '') filled++;
+      if (maxSalary.trim() !== '') filled++;
+      if (currency.trim() !== '') filled++;
+      if (requirements.trim() !== '') filled++;
+      if (responsibilities.trim() !== '') filled++;
+      if (benefits.trim() !== '') filled++;
+      return Math.round((filled / 10) * 100);
     }
     if (step === 3) {
-      return 100; // Step 3 is optional
+      let filled = 0;
+      if (mustHaveQualifications.trim() !== '') filled++;
+      if (preferredQualifications.trim() !== '') filled++;
+      return Math.round((filled / 2) * 100);
     }
     return 100;
-  }, [step, companyId, jobTitle, country, jobDescription]);
+  }, [
+    step,
+    companyId,
+    jobTitle,
+    country,
+    city,
+    jobDescription,
+    jobTypes,
+    workplaces,
+    experienceLevels,
+    minSalary,
+    maxSalary,
+    currency,
+    requirements,
+    responsibilities,
+    benefits,
+    mustHaveQualifications,
+    preferredQualifications,
+  ]);
 
   /* ---------------- validation ---------------- */
   const jobTitleError =
@@ -190,7 +224,7 @@ export default function JobBasicInfoPage() {
   /* ---------------- UI ---------------- */
   return (
     <div className="min-h-screen bg-neutral-50 flex flex-col">
-      <header className="bg-white py-10 px-12 border-b">
+      <header className="bg-white py-5 px-12 border-b">
         <img
           alt="CompaniaI Logo"
           loading="lazy"
@@ -214,14 +248,16 @@ export default function JobBasicInfoPage() {
             {/* ---------- Header ---------- */}
             <div className="px-6 pt-8">
               <div className="flex flex-col items-center text-center mb-8">
-                <h1 className="text-xl font-semibold text-neutral-900">
+                <div className="h-12 w-12 rounded-xl bg-blue-50 flex items-center justify-center mb-4">
+                  <svg className="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <h1 className="text-2xl font-bold text-neutral-900">
                   Create Job Opening
                 </h1>
-                <p className="text-sm text-neutral-700 mt-1">
-                  {step === 1 ? 'Fill out the basic information for your new job post' : 
-                   step === 2 ? 'Add more details to your job post' :
-                   step === 3 ? 'Specify the qualifications for this role' :
-                   'Review and publish your job post'}
+                <p className="text-sm text-neutral-500 mt-1">
+                  Fill in the details of the position you are looking for
                 </p>
               </div>
 
@@ -238,8 +274,8 @@ export default function JobBasicInfoPage() {
                   <div key={s.id} className="flex items-center flex-1 last:flex-none">
                     <div className="flex flex-col items-center relative z-10 bg-white pr-2">
                       <div className="relative h-12 w-12 flex items-center justify-center">
-                        {/* Circular Progress SVG - Hidden for Step 3 as it's optional */}
-                        {isCurrent && s.id !== 3 && (
+                        {/* Circular Progress SVG */}
+                        {isCurrent && (
                           <svg className="absolute inset-0 h-full w-full -rotate-90">
                             <circle
                               cx="24"
@@ -270,11 +306,11 @@ export default function JobBasicInfoPage() {
                             isCompleted
                               ? 'bg-black text-white border-black'
                               : isCurrent
-                              ? `bg-white text-black ${s.id === 3 ? 'border-neutral-200' : 'border-transparent'}`
+                              ? 'bg-white text-black border-transparent'
                               : 'bg-white text-neutral-400 border-neutral-200'
                           }`}
                         >
-                          {isCompleted ? '✓' : s.id}
+                          {s.id}
                         </div>
                       </div>
                       <span
@@ -378,6 +414,14 @@ export default function JobBasicInfoPage() {
               </div>
             ) : (
               <>
+                {isValid && step < 4 && (
+                  <div className="mb-6 flex items-center space-x-2 text-emerald-600 bg-emerald-50/50 px-4 py-2 rounded-lg border border-emerald-100">
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-xs font-bold">You can continue to the next step</span>
+                  </div>
+                )}
                 {step === 1 && (
                   <>
                     {/* Company */}
@@ -748,31 +792,119 @@ export default function JobBasicInfoPage() {
             )}
 
             {step === 4 && (
-              <div className="py-10 text-center">
-                <div className="mb-6">
-                  <div className={`h-16 w-16 ${publishMode === 'publish' ? 'bg-emerald-100 text-emerald-600' : 'bg-blue-100 text-blue-600'} rounded-full flex items-center justify-center mx-auto mb-4`}>
-                    {publishMode === 'publish' ? (
-                      <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              <div className="space-y-6 animate-slide-in">
+                {/* Job Status Dropdown */}
+                <div className="space-y-2">
+                  <label className="block text-base font-bold text-neutral-900">Job Status</label>
+                  <div className="relative">
+                    <button
+                      onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
+                      className="w-full flex items-center justify-between bg-neutral-200/60 border border-neutral-200 rounded-lg px-4 py-3.5 text-sm text-neutral-900 hover:bg-neutral-200 transition-colors"
+                    >
+                      <span>{publishMode === 'publish' ? 'Published' : 'Draft'}</span>
+                      <svg className={`h-4 w-4 text-neutral-500 transition-transform ${isStatusDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
-                    ) : (
-                      <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                      </svg>
+                    </button>
+
+                    {isStatusDropdownOpen && (
+                      <div className="absolute z-20 mt-1 w-full bg-white border border-neutral-200 rounded-lg shadow-lg overflow-hidden">
+                        <button
+                          onClick={() => {
+                            setPublishMode('draft');
+                            setIsStatusDropdownOpen(false);
+                          }}
+                          className="w-full flex items-center justify-between px-4 py-3 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors border-b border-neutral-100"
+                        >
+                          <span>Draft</span>
+                          {publishMode === 'draft' && (
+                            <svg className="h-4 w-4 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                        </button>
+                        <button
+                          onClick={() => {
+                            setPublishMode('publish');
+                            setIsStatusDropdownOpen(false);
+                          }}
+                          className="w-full flex items-center justify-between px-4 py-3 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
+                        >
+                          <span>Published</span>
+                          {publishMode === 'publish' && (
+                            <svg className="h-4 w-4 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                        </button>
+                      </div>
                     )}
                   </div>
-                  <h2 className="text-2xl font-bold text-neutral-900">
-                    {publishMode === 'publish' ? 'Ready to Publish?' : 'Save as Draft?'}
-                  </h2>
-                  <p className="text-neutral-600 mt-2">
-                    Review the details on the right before making it live.{' '}
-                    <button
-                      onClick={() => setPublishMode(publishMode === 'publish' ? 'draft' : 'publish')}
-                      className="text-black font-semibold hover:underline"
-                    >
-                      {publishMode === 'publish' ? 'or save as a draft?' : 'or publish job?'}
-                    </button>
-                  </p>
+                </div>
+
+                {/* Job Summary Card */}
+                <div className="border border-neutral-200 rounded-xl p-8 space-y-8">
+                  <div>
+                    <h3 className="text-lg font-bold text-neutral-900 mb-6">Job Summary</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+                      <div className="flex items-start">
+                        <span className="text-sm font-bold text-neutral-900 w-24 shrink-0">Company:</span>
+                        <span className="text-sm text-neutral-700">
+                          {COMPANIES.find(c => c.id === companyId)?.name || 'Not specified'}
+                        </span>
+                      </div>
+                      <div className="flex items-start">
+                        <span className="text-sm font-bold text-neutral-900 w-24 shrink-0">Title:</span>
+                        <span className="text-sm text-neutral-700">{jobTitle || 'Not specified'}</span>
+                      </div>
+                      <div className="flex items-start">
+                        <span className="text-sm font-bold text-neutral-900 w-24 shrink-0">Job Type:</span>
+                        <span className="text-sm text-neutral-700">
+                          {jobTypes.length > 0 ? jobTypes.join(', ') : 'Not specified'}
+                        </span>
+                      </div>
+                      <div className="flex items-start">
+                        <span className="text-sm font-bold text-neutral-900 w-24 shrink-0">Workplace:</span>
+                        <span className="text-sm text-neutral-700">
+                          {workplaces.length > 0 ? workplaces.join(', ') : 'Not specified'}
+                        </span>
+                      </div>
+                      <div className="flex items-start">
+                        <span className="text-sm font-bold text-neutral-900 w-24 shrink-0">Location:</span>
+                        <span className="text-sm text-neutral-700">
+                          {city && country ? `${city}, ${country.name}` : country ? country.name : city || 'Not specified'}
+                        </span>
+                      </div>
+                      <div className="flex items-start">
+                        <span className="text-sm font-bold text-neutral-900 w-24 shrink-0">Experience:</span>
+                        <span className="text-sm text-neutral-700">
+                          {experienceLevels.length > 0 ? experienceLevels.join(', ') : 'Not specified'}
+                        </span>
+                      </div>
+                      <div className="flex items-start">
+                        <span className="text-sm font-bold text-neutral-900 w-24 shrink-0">Salary:</span>
+                        <span className="text-sm text-neutral-700">
+                          {minSalary && maxSalary && currency ? `${currency} ${minSalary} - ${maxSalary}` : 'Not specified'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Must have Qualifications */}
+                  <div>
+                    <h3 className="text-sm font-bold text-neutral-900 mb-3">Must have Qualifications</h3>
+                    <p className="text-sm text-neutral-600 leading-relaxed whitespace-pre-wrap">
+                      {mustHaveQualifications || 'No must-have qualifications provided.'}
+                    </p>
+                  </div>
+
+                  {/* Preferred Qualifications */}
+                  <div>
+                    <h3 className="text-sm font-bold text-neutral-900 mb-3">Preferred Qualifications</h3>
+                    <p className="text-sm text-neutral-600 leading-relaxed whitespace-pre-wrap">
+                      {preferredQualifications || 'No preferred qualifications provided.'}
+                    </p>
+                  </div>
                 </div>
               </div>
             )}
@@ -781,107 +913,113 @@ export default function JobBasicInfoPage() {
       </div>
 
       {/* ---------- Sticky Footer ---------- */}
-          <div className="px-6 py-4 border-t bg-white sticky bottom-0 grid grid-cols-2 gap-4">
-            <button 
-              disabled={isAnalyzing}
-              onClick={() => {
-                if (step === 1) window.history.back();
-                else setStep(step - 1);
-              }}
-              className="text-sm font-medium text-neutral-600 hover:text-neutral-900 hover:underline py-2.5 text-center disabled:opacity-30"
-            >
-              {step === 1 ? 'Cancel job creation' : `← ${STEPS[step - 2].label}`}
-            </button>
-            
-            {step === 4 ? (
-              <button
+          <div className="px-6 py-4 border-t bg-white sticky bottom-0">
+            <div className="grid grid-cols-2 gap-4">
+              <button 
+                disabled={isAnalyzing}
                 onClick={() => {
-                  if (publishMode === 'publish') alert('Publishing Job...');
-                  else alert('Saving as Draft...');
+                  if (step === 1) window.history.back();
+                  else setStep(step - 1);
                 }}
-                className="bg-black text-white w-full py-2.5 rounded-md text-sm font-medium transition-colors hover:bg-neutral-800"
+                className="text-sm font-medium text-neutral-600 hover:text-neutral-900 hover:underline py-2.5 text-center disabled:opacity-30"
               >
-                {publishMode === 'publish' ? 'Publish Job' : 'Save as Draft'}
+                {step === 1 ? 'Cancel job creation' : `← ${STEPS[step - 2].label}`}
               </button>
-            ) : (
-              <button
-                disabled={!isValid || isAnalyzing}
-                onClick={() => {
-                  if (step === 2) setIsAnalyzing(true);
-                  else if (step < 4) setStep(step + 1);
-                }}
-                className="bg-black text-white w-full py-2.5 rounded-md text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors hover:bg-neutral-800"
-              >
-                {isAnalyzing ? 'Analyzing...' : `Continue → ${STEPS[step].label}`}
-              </button>
-            )}
+              
+              {step === 4 ? (
+                <button
+                  onClick={() => {
+                    if (publishMode === 'publish') alert('Publishing Job...');
+                    else alert('Saving as Draft...');
+                  }}
+                  className="bg-black text-white w-full py-2.5 rounded-md text-sm font-medium transition-colors hover:bg-neutral-800"
+                >
+                  {publishMode === 'publish' ? 'Publish Job' : 'Save as Draft'}
+                </button>
+              ) : (
+                <button
+                  disabled={!isValid || isAnalyzing}
+                  onClick={() => {
+                    if (step === 2) setIsAnalyzing(true);
+                    else if (step < 4) setStep(step + 1);
+                  }}
+                  className="bg-black text-white w-full py-2.5 rounded-md text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors hover:bg-neutral-800"
+                >
+                  {isAnalyzing ? 'Analyzing...' : `Continue → ${STEPS[step].label}`}
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
         {/* ---------- Right Side: Live Review ---------- */}
-        <div className="hidden xl:block flex-1 max-w-[400px] bg-white rounded-xl shadow-sm border max-h-[85vh] overflow-y-auto p-8 shrink-0">
-          <div className="space-y-8">
-            {/* Job Summary */}
-            <div>
-              <h3 className="text-lg font-bold text-neutral-900 mb-6">Job Summary</h3>
-              <div className="space-y-4">
-                <div className="flex items-start">
-                  <span className="text-sm font-bold text-neutral-900 w-24 shrink-0">Company:</span>
-                  <span className="text-sm text-neutral-700">
-                    {COMPANIES.find(c => c.id === companyId)?.name || 'Not specified'}
-                  </span>
+        <div className="hidden xl:block flex-1 max-w-[400px] shrink-0">
+          <div className={`transition-all duration-500 ease-in-out ${step === 4 ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
+            <div className="bg-white rounded-xl shadow-sm border max-h-[85vh] overflow-y-auto p-8">
+              <div className="space-y-8">
+                {/* Job Summary */}
+                <div>
+                  <h3 className="text-lg font-bold text-neutral-900 mb-6">Job Summary</h3>
+                  <div className="space-y-4">
+                    <div className="flex items-start">
+                      <span className="text-sm font-bold text-neutral-900 w-24 shrink-0">Company:</span>
+                      <span className="text-sm text-neutral-700">
+                        {COMPANIES.find(c => c.id === companyId)?.name || 'Not specified'}
+                      </span>
+                    </div>
+                    <div className="flex items-start">
+                      <span className="text-sm font-bold text-neutral-900 w-24 shrink-0">Title:</span>
+                      <span className="text-sm text-neutral-700">{jobTitle || 'Not specified'}</span>
+                    </div>
+                    <div className="flex items-start">
+                      <span className="text-sm font-bold text-neutral-900 w-24 shrink-0">Job Type:</span>
+                      <span className="text-sm text-neutral-700">
+                        {jobTypes.length > 0 ? jobTypes.join(', ') : 'Not specified'}
+                      </span>
+                    </div>
+                    <div className="flex items-start">
+                      <span className="text-sm font-bold text-neutral-900 w-24 shrink-0">Workplace:</span>
+                      <span className="text-sm text-neutral-700">
+                        {workplaces.length > 0 ? workplaces.join(', ') : 'Not specified'}
+                      </span>
+                    </div>
+                    <div className="flex items-start">
+                      <span className="text-sm font-bold text-neutral-900 w-24 shrink-0">Location:</span>
+                      <span className="text-sm text-neutral-700">
+                        {city && country ? `${city}, ${country.name}` : country ? country.name : city || 'Not specified'}
+                      </span>
+                    </div>
+                    <div className="flex items-start">
+                      <span className="text-sm font-bold text-neutral-900 w-24 shrink-0">Experience:</span>
+                      <span className="text-sm text-neutral-700">
+                        {experienceLevels.length > 0 ? experienceLevels.join(', ') : 'Not specified'}
+                      </span>
+                    </div>
+                    <div className="flex items-start">
+                      <span className="text-sm font-bold text-neutral-900 w-24 shrink-0">Salary:</span>
+                      <span className="text-sm text-neutral-700">
+                        {minSalary && maxSalary && currency ? `${currency} ${minSalary} - ${maxSalary}` : 'Not specified'}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex items-start">
-                  <span className="text-sm font-bold text-neutral-900 w-24 shrink-0">Title:</span>
-                  <span className="text-sm text-neutral-700">{jobTitle || 'Not specified'}</span>
+
+                {/* Must have Qualifications */}
+                <div>
+                  <h3 className="text-sm font-bold text-neutral-900 mb-3">Must have Qualifications</h3>
+                  <p className="text-sm text-neutral-600 leading-relaxed whitespace-pre-wrap">
+                    {mustHaveQualifications || 'No must-have qualifications provided.'}
+                  </p>
                 </div>
-                <div className="flex items-start">
-                  <span className="text-sm font-bold text-neutral-900 w-24 shrink-0">Job Type:</span>
-                  <span className="text-sm text-neutral-700">
-                    {jobTypes.length > 0 ? jobTypes.join(', ') : 'Not specified'}
-                  </span>
-                </div>
-                <div className="flex items-start">
-                  <span className="text-sm font-bold text-neutral-900 w-24 shrink-0">Workplace:</span>
-                  <span className="text-sm text-neutral-700">
-                    {workplaces.length > 0 ? workplaces.join(', ') : 'Not specified'}
-                  </span>
-                </div>
-                <div className="flex items-start">
-                  <span className="text-sm font-bold text-neutral-900 w-24 shrink-0">Location:</span>
-                  <span className="text-sm text-neutral-700">
-                    {city && country ? `${city}, ${country.name}` : country ? country.name : city || 'Not specified'}
-                  </span>
-                </div>
-                <div className="flex items-start">
-                  <span className="text-sm font-bold text-neutral-900 w-24 shrink-0">Experience:</span>
-                  <span className="text-sm text-neutral-700">
-                    {experienceLevels.length > 0 ? experienceLevels.join(', ') : 'Not specified'}
-                  </span>
-                </div>
-                <div className="flex items-start">
-                  <span className="text-sm font-bold text-neutral-900 w-24 shrink-0">Salary:</span>
-                  <span className="text-sm text-neutral-700">
-                    {minSalary && maxSalary && currency ? `${currency} ${minSalary} - ${maxSalary}` : 'Not specified'}
-                  </span>
+
+                {/* Preferred Qualifications */}
+                <div>
+                  <h3 className="text-sm font-bold text-neutral-900 mb-3">Preferred Qualifications</h3>
+                  <p className="text-sm text-neutral-600 leading-relaxed whitespace-pre-wrap">
+                    {preferredQualifications || 'No preferred qualifications provided.'}
+                  </p>
                 </div>
               </div>
-            </div>
-
-            {/* Must have Qualifications */}
-            <div>
-              <h3 className="text-sm font-bold text-neutral-900 mb-3">Must have Qualifications</h3>
-              <p className="text-sm text-neutral-600 leading-relaxed whitespace-pre-wrap">
-                {mustHaveQualifications || 'No must-have qualifications provided.'}
-              </p>
-            </div>
-
-            {/* Preferred Qualifications */}
-            <div>
-              <h3 className="text-sm font-bold text-neutral-900 mb-3">Preferred Qualifications</h3>
-              <p className="text-sm text-neutral-600 leading-relaxed whitespace-pre-wrap">
-                {preferredQualifications || 'No preferred qualifications provided.'}
-              </p>
             </div>
           </div>
         </div>

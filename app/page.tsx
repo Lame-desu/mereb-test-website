@@ -62,13 +62,15 @@ export default function CreateCompanyPage() {
 
   /* -------------------- progress -------------------- */
   const progress = useMemo(() => {
-    const hasCompany = companyName.trim().length > 0;
-    const hasLocation = Boolean(location);
+    let filled = 0;
+    if (companyName.trim().length > 0) filled++;
+    if (location) filled++;
+    if (website.trim().length > 0) filled++;
+    if (logoFile) filled++;
+    if (about.trim().length > 0) filled++;
 
-    if (hasCompany && hasLocation) return 100;
-    if (hasCompany || hasLocation) return 50;
-    return 0;
-  }, [companyName, location]);
+    return Math.round((filled / 5) * 100);
+  }, [companyName, location, website, logoFile, about]);
 
   /* -------------------- validation -------------------- */
   const companyNameError =
@@ -170,7 +172,7 @@ export default function CreateCompanyPage() {
                   <span className="text-xs text-neutral-600">
                     {progress}% complete
                   </span>
-                  {progress === 100 && (
+                  {isFormValid && (
                     <span className="text-xs text-green-600 font-medium">
                       You’re ready to create your company
                     </span>
