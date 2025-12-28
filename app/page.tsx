@@ -137,7 +137,7 @@ export default function CreateCompanyPage() {
 
   return (
     <div className="min-h-screen bg-neutral-50 flex flex-col">
-      <header className="bg-white py-10 px-12 border-b">
+      <header className="bg-white py-5 px-12 border-b">
         <img
           alt="CompaniaI Logo"
           loading="lazy"
