@@ -262,7 +262,7 @@ export default function JobBasicInfoPage() {
               </div>
 
             {/* Stepper */}
-            <div className="flex items-center justify-between max-w-2xl mx-auto mb-10 px-2 md:px-4">
+            <div className="flex items-start justify-between max-w-2xl mx-auto mb-10 px-2 md:px-4">
               {STEPS.map((s, idx) => {
                 const isCurrent = step === s.id;
                 const isCompleted = step > s.id;
@@ -271,9 +271,20 @@ export default function JobBasicInfoPage() {
                 const offset = circumference - (progress / 100) * circumference;
 
                 return (
-                  <div key={s.id} className="flex items-center flex-1 last:flex-none">
-                    <div className="flex flex-col items-center relative z-10 bg-white pr-1 md:pr-2">
-                      <div className="relative h-10 w-10 md:h-12 md:w-12 flex items-center justify-center">
+                  <div key={s.id} className="relative flex-1 last:flex-none">
+                    {/* Line */}
+                    {idx < STEPS.length - 1 && (
+                      <div className="absolute top-5 md:top-6 left-1/2 w-full h-[2px] bg-neutral-200 -z-0">
+                        <div 
+                          className="h-full bg-black transition-all duration-500 ease-in-out" 
+                          style={{ width: step > s.id ? '100%' : '0%' }}
+                        />
+                      </div>
+                    )}
+
+                    {/* Circle + Label */}
+                    <div className="relative flex flex-col items-center z-10">
+                      <div className="relative h-10 w-10 md:h-12 md:w-12 flex items-center justify-center bg-white rounded-full">
                         {/* Circular Progress SVG */}
                         {isCurrent && (
                           <svg className="absolute inset-0 h-full w-full -rotate-90" viewBox="0 0 48 48">
@@ -321,9 +332,6 @@ export default function JobBasicInfoPage() {
                         {s.label}
                       </span>
                     </div>
-                    {idx < STEPS.length - 1 && (
-                      <div className={`flex-1 h-[2px] -mt-10 md:-mt-8 mx-1 md:mx-2 ${step > s.id ? 'bg-black' : 'bg-neutral-200'}`} />
-                    )}
                   </div>
                 );
               })}
