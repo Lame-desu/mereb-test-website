@@ -262,7 +262,7 @@ export default function JobBasicInfoPage() {
               </div>
 
             {/* Stepper */}
-            <div className="flex items-center justify-between max-w-2xl mx-auto mb-10 px-4">
+            <div className="flex items-center justify-between max-w-2xl mx-auto mb-10 px-2 md:px-4">
               {STEPS.map((s, idx) => {
                 const isCurrent = step === s.id;
                 const isCompleted = step > s.id;
@@ -272,11 +272,11 @@ export default function JobBasicInfoPage() {
 
                 return (
                   <div key={s.id} className="flex items-center flex-1 last:flex-none">
-                    <div className="flex flex-col items-center relative z-10 bg-white pr-2">
-                      <div className="relative h-12 w-12 flex items-center justify-center">
+                    <div className="flex flex-col items-center relative z-10 bg-white pr-1 md:pr-2">
+                      <div className="relative h-10 w-10 md:h-12 md:w-12 flex items-center justify-center">
                         {/* Circular Progress SVG */}
                         {isCurrent && (
-                          <svg className="absolute inset-0 h-full w-full -rotate-90">
+                          <svg className="absolute inset-0 h-full w-full -rotate-90" viewBox="0 0 48 48">
                             <circle
                               cx="24"
                               cy="24"
@@ -302,7 +302,7 @@ export default function JobBasicInfoPage() {
                         )}
                         
                         <div
-                          className={`h-10 w-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-200 border-2 ${
+                          className={`h-8 w-8 md:h-10 md:w-10 rounded-full flex items-center justify-center text-xs md:text-sm font-bold transition-all duration-200 border-2 ${
                             isCompleted
                               ? 'bg-black text-white border-black'
                               : isCurrent
@@ -314,7 +314,7 @@ export default function JobBasicInfoPage() {
                         </div>
                       </div>
                       <span
-                        className={`text-[11px] mt-2 font-medium whitespace-nowrap transition-colors duration-200 ${
+                        className={`text-[9px] md:text-[11px] mt-2 font-medium text-center transition-colors duration-200 max-w-[60px] md:max-w-none leading-tight ${
                           step >= s.id ? 'text-neutral-900' : 'text-neutral-400'
                         }`}
                       >
@@ -322,7 +322,7 @@ export default function JobBasicInfoPage() {
                       </span>
                     </div>
                     {idx < STEPS.length - 1 && (
-                      <div className={`flex-1 h-[2px] -mt-8 mx-2 ${step > s.id ? 'bg-black' : 'bg-neutral-200'}`} />
+                      <div className={`flex-1 h-[2px] -mt-10 md:-mt-8 mx-1 md:mx-2 ${step > s.id ? 'bg-black' : 'bg-neutral-200'}`} />
                     )}
                   </div>
                 );
@@ -333,20 +333,20 @@ export default function JobBasicInfoPage() {
           {/* ---------- Scrollable Content ---------- */}
           <div className="px-6 py-6 overflow-y-auto space-y-6 flex-1">
             {isAnalyzing ? (
-              <div className="flex flex-col items-center justify-center py-12 space-y-8">
-                <div className="relative h-48 w-48 flex items-center justify-center">
+              <div className="flex flex-col items-center justify-center py-8 md:py-12 space-y-6 md:space-y-8">
+                <div className="relative h-36 w-36 md:h-48 md:w-48 flex items-center justify-center">
                   {/* Outer Light Gray Circle */}
                   <div className="absolute inset-0 bg-neutral-100/80 rounded-full" />
 
                   {/* Ripple Effect */}
-                  <div className="absolute h-32 w-32 border-2 border-neutral-300/30 rounded-full animate-ripple" />
-                  <div className="absolute h-32 w-32 border-2 border-neutral-300/30 rounded-full animate-ripple" style={{ animationDelay: '1s' }} />
+                  <div className="absolute h-24 w-24 md:h-32 md:w-32 border-2 border-neutral-300/30 rounded-full animate-ripple" />
+                  <div className="absolute h-24 w-24 md:h-32 md:w-32 border-2 border-neutral-300/30 rounded-full animate-ripple" style={{ animationDelay: '1s' }} />
                   
                   {/* Inner White Circle */}
-                  <div className="relative h-32 w-32 bg-white rounded-full shadow-sm flex items-center justify-center border border-neutral-100 z-10">
+                  <div className="relative h-24 w-24 md:h-32 md:w-32 bg-white rounded-full shadow-sm flex items-center justify-center border border-neutral-100 z-10">
                     <div className="relative">
                       {/* Brain Icon */}
-                      <svg className="h-14 w-14 text-neutral-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <svg className="h-10 w-10 md:h-14 md:w-14 text-neutral-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a2 2 0 01-2-2m2 2a2 2 0 002-2m-2 2V17m0-13a7 7 0 00-7 7 7 7 0 007 7m0-14a7 7 0 017 7 7 7 0 01-7 7m0-14v14" />
                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 8c-.5 0-1 .5-1 1s.5 1 1 1" />
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 8c.5 0 1 .5 1 1s-.5 1-1 1" />
@@ -355,9 +355,9 @@ export default function JobBasicInfoPage() {
                       </svg>
                       
                       {/* Rotating Star */}
-                      <div className="absolute inset-0 flex items-center justify-center animate-orbit">
-                        <div className="bg-white rounded-full p-1.5 shadow-sm border border-neutral-100 flex items-center justify-center">
-                          <svg className="h-4 w-4 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
+                      <div className="absolute inset-0 flex items-center justify-center animate-orbit [--orbit-radius:54px] md:[--orbit-radius:72px]">
+                        <div className="bg-white rounded-full p-1 md:p-1.5 shadow-sm border border-neutral-100 flex items-center justify-center">
+                          <svg className="h-3 w-3 md:h-4 md:w-4 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                           </svg>
                         </div>
@@ -367,7 +367,7 @@ export default function JobBasicInfoPage() {
                 </div>
 
                 <div className="text-center">
-                  <h2 className="text-xl font-bold text-neutral-900">AI is analyzing your job</h2>
+                  <h2 className="text-lg md:text-xl font-bold text-neutral-900">AI is analyzing your job</h2>
                   <p className="text-sm text-neutral-500 mt-1">This could take up to a minute</p>
                 </div>
 
