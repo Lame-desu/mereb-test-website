@@ -271,10 +271,10 @@ export default function JobBasicInfoPage() {
                 const offset = circumference - (progress / 100) * circumference;
 
                 return (
-                  <div key={s.id} className="relative flex-1 last:flex-none">
+                  <div key={s.id} className="relative flex-1">
                     {/* Line */}
                     {idx < STEPS.length - 1 && (
-                      <div className="absolute top-5 md:top-6 left-1/2 w-full h-[2px] bg-neutral-200 -z-0">
+                      <div className="absolute top-5 md:top-6 left-[calc(50%+22px)] md:left-[calc(50%+36px)] w-[calc(100%-44px)] md:w-[calc(100%-72px)] h-[2px] bg-neutral-200 -z-0">
                         <div 
                           className="h-full bg-black transition-all duration-500 ease-in-out" 
                           style={{ width: step > s.id ? '100%' : '0%' }}
