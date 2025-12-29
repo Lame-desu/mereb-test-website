@@ -398,55 +398,96 @@ export default function CreateCompanyPage() {
             </div>
           </div>
         ) : (
-          <div className="w-full max-w-[800px] bg-neutral-50 rounded-xl shadow-sm border p-12 text-center">
-            <div className="mb-8 flex items-center justify-center space-x-2">
-              <svg className="h-5 w-5 text-neutral-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-              </svg>
-              <p className="text-lg font-semibold text-neutral-900">
+          <div className="w-full max-w-[800px] bg-white rounded-2xl shadow-xl border border-neutral-100 overflow-hidden">
+            {/* Success Banner */}
+            <div className="bg-emerald-50 py-4 px-6 flex items-center justify-center space-x-2 border-b border-emerald-100">
+              <div className="h-6 w-6 bg-emerald-500 rounded-full flex items-center justify-center">
+                <svg className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <p className="text-sm font-bold text-emerald-800 uppercase tracking-wider">
                 Company created successfully
               </p>
             </div>
 
-            <div className="mb-10">
-              <h2 className="text-3xl font-bold text-neutral-900 mb-3">
-                Let’s create your first job
-              </h2>
-              <p className="text-neutral-600 text-lg">
-                It takes about 2–3 minutes. Our AI will help you.
-              </p>
-            </div>
+            <div className="pt-12 pb-6 text-center">
+              {/* Amazing Company Identity Section */}
+              <div className="mb-12 flex flex-col items-center">
+                <div className="relative group">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-blue-500 rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                  <div className="relative h-32 w-32 rounded-3xl bg-white shadow-2xl flex items-center justify-center overflow-hidden border border-neutral-100">
+                    {logoPreview ? (
+                      <img src={logoPreview} alt={companyName} className="h-full w-full object-cover" />
+                    ) : (
+                      <div className="h-full w-full bg-gradient-to-br from-neutral-900 to-neutral-700 flex items-center justify-center">
+                        <span className="text-4xl font-black text-white tracking-tighter">{initials}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="mt-6">
+                  <h2 className="text-4xl font-black text-neutral-900 tracking-tight mb-2">
+                    {companyName}
+                  </h2>
+                  <div className="flex items-center justify-center space-x-3">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-neutral-100 text-neutral-600">
+                      <svg className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      {location?.name}
+                    </span>
+                    {website && (
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-600">
+                        <svg className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                        </svg>
+                        {website.replace('https://', '')}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
 
-            <div className="space-y-6 max-w-md mx-auto">
-              <div>
-                <button
-                  onClick={() => router.push('/CreateJob')}
-                  className="w-full bg-black text-white rounded-xl py-4 text-lg font-semibold hover:bg-neutral-800 transition-colors"
-                >
-                  Create Job Now
-                </button>
-                <p className="text-xs text-neutral-500 mt-2">
-                  Takes ~2–3 minutes
+              <div className="mb-10">
+                <h3 className="text-2xl font-bold text-neutral-900 mb-3">
+                  Ready to hire?
+                </h3>
+                <p className="text-neutral-600 text-lg max-w-md mx-auto">
+                  Let's create your first job post. Our AI assistant will help you draft it in seconds.
                 </p>
               </div>
 
-              <div>
+              <div className="space-y-4 max-w-sm mx-auto">
+                <div className="flex flex-col items-center">
+                  <button
+                    onClick={() => router.push('/CreateJob')}
+                    className="w-full bg-black text-white rounded-2xl py-4 text-lg font-bold hover:bg-neutral-800 transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
+                  >
+                    Create Your First Job
+                  </button>
+                  <p className="text-xs text-neutral-500 mt-3 font-medium">
+                    ⏱ Takes approximately 2–3 minutes
+                  </p>
+                </div>
                 <button
                   onClick={() => setShowSuccessModal(false)}
-                  className="text-neutral-600 hover:underline text-sm font-medium"
+                  className="w-full text-neutral-500 hover:text-neutral-900 hover:underline text-sm font-bold transition-colors pt-2"
                 >
-                  I’ll do this later
+                  I'll do this later
                 </button>
               </div>
             </div>
-
-            <div className="mt-12 pt-8 border-t border-neutral-100">
+            <div className="bg-neutral-50/50 py-2 px-12 border-t border-neutral-100 text-center">
               <p className="text-xs text-neutral-500 leading-relaxed">
-                You can edit your company details and jobs anytime from the dashboard.
+                You can edit your company details and add or manage jobs anytime from your dashboard.
               </p>
             </div>
           </div>
         )}
       </div>
     </div>
-  )}
+  );
+}
